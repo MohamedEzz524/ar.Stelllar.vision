@@ -38,13 +38,12 @@
   .pj-track:hover{animation-play-state:paused}\
   @keyframes pjLmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}\
   @keyframes pjRmove{from{transform:translateX(-50%)}to{transform:translateX(0)}}\
-  .pj-card{flex:0 0 auto;position:relative;height:230px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.10);text-decoration:none;background:#0c0c0d;box-shadow:0 20px 44px -20px rgba(0,0,0,.9);transition:transform .4s ease,border-color .4s ease}\
+  .pj-card{flex:0 0 auto;position:relative;height:300px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.10);text-decoration:none;background:#0c0c0d;box-shadow:0 22px 48px -20px rgba(0,0,0,.9);transition:transform .4s ease,border-color .4s ease}\
   .pj-card img{display:block;height:100%;width:auto;max-width:none;object-fit:contain}\
   .pj-card:hover{transform:translateY(-5px);border-color:rgba(192,192,192,.55)}\
-  .pj-ov{position:absolute;inset:0;direction:rtl;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:8px;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.12) 55%,transparent);pointer-events:none}\
-  .pj-title{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:1.12rem;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.6)}\
-  .pj-tag{background:rgba(20,20,22,.72);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);color:#e5e5e8;font-size:.72rem;padding:5px 12px;border-radius:999px}\
-  @media(max-width:620px){.pj-card{height:176px}.pj-title{font-size:.98rem}.pj-rows{gap:16px}}\
+  .pj-ov{position:absolute;inset:0;direction:rtl;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:18px;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.10) 55%,transparent);pointer-events:none}\
+  .pj-title{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:1.28rem;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.6)}\
+  @media(max-width:620px){.pj-card{height:220px}.pj-title{font-size:1.05rem}.pj-rows{gap:16px}}\
   .framer-d8kaby,[data-framer-name="Portfolio"]{display:none !important}\
   ';
 
@@ -76,7 +75,7 @@
   function card(p){
     return '<a class="pj-card" href="'+p.href+'" target="_blank" rel="noreferrer">'+
       '<img src="'+p.img+'" alt="'+p.t+'" loading="lazy">'+
-      '<span class="pj-ov"><span class="pj-title">'+p.t+'</span><span class="pj-tag">'+p.tag+'</span></span>'+
+      '<span class="pj-ov"><span class="pj-title">'+p.t+'</span></span>'+
     '</a>';
   }
   function row(items, dir){
