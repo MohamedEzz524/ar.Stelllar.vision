@@ -1,2 +1,0 @@
-import{t as e}from"./rolldown-runtime.C1vXY0sC.mjs";function t(e,t){return{description:`Egypt's first ecommerce-specialized agency. performance and creative, fully integrated. Since 2016.`,favicon:`/framerusercontent.com/assets/MLSLAVIcL7sXFoJARkbmNnyfM.png`,robots:`max-image-preview:large`,title:`Stelllar Vision`}}var n=e((()=>{}));export{t as n,n as t};
-//# sourceMappingURL=shared-lib.DBC3yFnn.mjs.map
