@@ -441,25 +441,31 @@
 })();
 </script><script src="/stellar-calendar.js"></script><script src="/stellar-projects.js"></script><script src="/stellar-stats.js"></script><script src="/stellar-leadmagnet.js"></script><script id="stellar-marquee">
 (function(){
+ var TAGS=['تطوير المواقع والمتاجر','تحسين معدّل التحويل','الهوية البصرية','تصميم واجهات المستخدم','المونتاج والموشن جرافيك','الصفحات التسويقية'];
  function fix(){
    var tick=document.querySelector('[data-framer-name="Ticker - Tags"]');
    if(!tick||tick.__svm)return;
-   var track=tick.querySelector('section')||tick.firstElementChild;
-   if(!track||!track.children.length)return;
+   var live=[];
+   [].slice.call(tick.querySelectorAll('*')).forEach(function(e){var t=(e.textContent||'').replace(/\s+/g,' ').trim();
+     if(t.length>3&&t.length<44&&e.children.length===0&&live.indexOf(t)<0)live.push(t);});
+   var tags=live.length>=2?live:TAGS;
    tick.__svm=1;
-   tick.style.overflow='hidden';
-   track.style.display='flex'; track.style.flexWrap='nowrap'; track.style.width='max-content';
-   track.style.justifyContent='flex-start'; track.style.willChange='transform';
-   var kids=[].slice.call(track.children);
-   kids.forEach(function(k){ track.appendChild(k.cloneNode(true)); });
    if(!document.getElementById('sv-marq-style')){
-     var st=document.createElement('style'); st.id='sv-marq-style';
-     st.textContent='@keyframes svMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}.sv-marq-run{animation:svMarq 26s linear infinite}.sv-marq-run:hover{animation-play-state:paused}';
+     var st=document.createElement('style');st.id='sv-marq-style';
+     st.textContent='#sv-marq-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}'
+       +'#sv-marq-track{display:flex;flex-wrap:nowrap;width:max-content;direction:ltr;will-change:transform;animation:svMarq 34s linear infinite}'
+       +'#sv-marq-track:hover{animation-play-state:paused}'
+       +'.sv-marq-pill{flex:0 0 auto;direction:rtl;white-space:nowrap;margin-right:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e5e5e8;font-family:Cairo,system-ui,sans-serif;font-size:.9rem;line-height:1;padding:10px 18px;border-radius:999px}'
+       +'@keyframes svMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}';
      document.head.appendChild(st);
    }
-   track.classList.add('sv-marq-run');
+   var doubled=tags.concat(tags),html='<div id="sv-marq-wrap"><div id="sv-marq-track">';
+   for(var i=0;i<doubled.length;i++)html+='<span class="sv-marq-pill">'+doubled[i]+'</span>';
+   html+='</div></div>';
+   tick.innerHTML=html;
+   tick.style.overflow='visible';tick.style.display='block';tick.style.height='auto';
  }
- window.addEventListener('load',function(){ var t=0; var iv=setInterval(function(){ fix(); if(++t>=14) clearInterval(iv); }, 700); });
+ window.addEventListener('load',function(){var t=0;var iv=setInterval(function(){fix();if(++t>=16)clearInterval(iv);},700);});
 })();
 </script></body>
 </html>
