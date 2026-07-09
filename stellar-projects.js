@@ -30,7 +30,7 @@
   .pj-head h2{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:clamp(2rem,4vw,3.1rem);color:#fff;margin:0 0 10px;letter-spacing:-.01em}\
   .pj-head h2 .g{color:#c0c0c0}\
   .pj-head p{color:#9a9a9f;font-size:.98rem;margin:0}\
-  .pj-rows{position:relative;left:50%;transform:translateX(-50%);width:100vw;max-width:100vw;display:flex;flex-direction:column;gap:22px}\
+  .pj-rows{width:100%;display:flex;flex-direction:column;gap:22px;direction:ltr}\
   .pj-row{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}\
   .pj-track{display:flex;flex-wrap:nowrap;width:max-content;direction:ltr;gap:20px;padding:6px 0;will-change:transform}\
   .pj-track.pjL{animation:pjLmove linear infinite}\
@@ -98,9 +98,30 @@
     wrap.innerHTML='<div class="pj-head"><h2>أعمالنا <span class="g">المميزة</span></h2>'+
       '<p>مجموعة من العلامات التي صمّمناها وبنيناها وساعدناها على النمو.</p></div>'+
       '<div class="pj-rows">'+row(P.slice(0,half),'pjL')+row(P.slice(half),'pjR')+'</div>';
-    sec.innerHTML=''; sec.style.background='transparent'; sec.style.padding='0'; sec.style.overflow='hidden'; sec.style.maxWidth='none'; sec.style.width='100%';
+    sec.innerHTML=''; sec.style.background='transparent'; sec.style.padding='0'; sec.style.overflow='visible'; sec.style.maxWidth='none'; sec.style.width='100%';
     sec.appendChild(wrap);
     sec.setAttribute('id','work');
+
+    // Full-bleed the rows to the viewport CONTENT width (excludes scrollbar, so
+    // no horizontal-scroll bug), even if the section sits in a constrained parent.
+    var rows=wrap.querySelector('.pj-rows');
+    function bleed(){
+      if(!rows) return;
+      // Direction-agnostic full-bleed: widen to the viewport CONTENT width (excludes
+      // scrollbar -> no horizontal-scroll bug), then translate by wherever the browser
+      // placed it so the left edge pins to x=0. Works regardless of RTL/LTR flow.
+      rows.style.transform='none'; rows.style.width='100%';
+      void rows.offsetWidth;
+      var vw=document.documentElement.clientWidth;
+      rows.style.width=vw+'px';
+      void rows.offsetWidth;
+      var left=rows.getBoundingClientRect().left;
+      rows.style.transform='translateX('+(-left)+'px)';
+    }
+    bleed();
+    window.addEventListener('resize', bleed);
+    window.addEventListener('load', bleed);
+    setTimeout(bleed,400); setTimeout(bleed,1200);
 
     // constant speed + seamless: duration from measured half-width (~45px/s)
     [].slice.call(wrap.querySelectorAll('.pj-track')).forEach(function(tr){
