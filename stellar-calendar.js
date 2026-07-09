@@ -187,9 +187,20 @@
     for(var i=0;i<labels.length;i++){ var p=labels[i]; for(var k=0;k<16&&p.parentElement;k++){ p=p.parentElement; if(p.querySelector('[name="Name"]')&&p.querySelector('[name="Email"]')) return p; } }
     return null;
   }
+  function unhide(node){ // self-heal: some devices leave the contact section under a
+    var a=node;          // Framer appear-animation (opacity:0) whose element lacks the
+    for(var i=0;i<16&&a&&a!==document.body;i++){ // data-framer-appear-id our CSS targets.
+      var cs=getComputedStyle(a);
+      if(parseFloat(cs.opacity)<1) a.style.setProperty('opacity','1','important');
+      if(cs.visibility==='hidden') a.style.setProperty('visibility','visible','important');
+      if(cs.display==='none') a.style.setProperty('display','block','important');
+      if(a.hasAttribute&&a.hasAttribute('data-framer-appear-id')) a.style.setProperty('transform','none','important');
+      a=a.parentElement;
+    }
+  }
   function renderForm(){
     var c=findFormContainer(); if(!c) return; if(c.__svForm) return; c.__svForm=true;
-    c.innerHTML=FORM_HTML; c.style.direction='rtl';
+    c.innerHTML=FORM_HTML; c.style.direction='rtl'; unhide(c);
     var opener=c.querySelector('#cf-opener'); setOpenerLabel(opener);
     opener.addEventListener('click',function(e){ e.preventDefault(); openPicker(function(){ setOpenerLabel(opener); }); });
     ['cf-stage','cf-help','cf-owner'].forEach(function(id){ var s=document.getElementById(id); if(s) s.addEventListener('change',function(){ toggleConds(c); }); });

@@ -486,7 +486,7 @@
  }
  function boot(){var t=0;var iv=setInterval(function(){fix();if(++t>=40)clearInterval(iv);},700);} // self-heal ~28s
  if(document.readyState==='complete')boot();else window.addEventListener('load',boot);
- var rz;window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(function(){var tick=document.querySelector('[data-framer-name="Ticker - Tags"]');if(tick&&!building)build(tick);},400);});
+ var rz,lastW=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lastW)return;lastW=window.innerWidth;clearTimeout(rz);rz=setTimeout(function(){var tick=document.querySelector('[data-framer-name="Ticker - Tags"]');if(tick&&!building)build(tick);},400);});
 })();
 </script></body>
 </html>

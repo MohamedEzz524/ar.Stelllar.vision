@@ -118,7 +118,8 @@
       rows.style.transform='translateX('+(-left)+'px)';
     }
     bleed();
-    window.addEventListener('resize', bleed);
+    var lastBW=window.innerWidth; // only re-bleed on real WIDTH change (ignore mobile URL-bar resize)
+    window.addEventListener('resize', function(){ if(window.innerWidth===lastBW) return; lastBW=window.innerWidth; bleed(); });
     window.addEventListener('load', bleed);
     setTimeout(bleed,400); setTimeout(bleed,1200);
 
