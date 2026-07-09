@@ -1,7 +1,8 @@
 /* ============================================================================
-   Stelllar Vision — projects showcase. Replaces the old creative gallery with a
-   card grid (image + title + subtitle + icon + tag), using the agency's real
-   projects. RTL, black/white/silver, matches stelllar.vision project data.
+   Stelllar Vision — projects showcase. Full-width TWO-ROW marquee: the rows
+   scroll in opposite directions with faded side masks. Cards take each image's
+   natural aspect ratio (fixed height, auto width) so screenshots aren't clipped.
+   RTL page, but tracks are LTR to avoid the RTL overflow bug; pills stay RTL.
    ============================================================================ */
 (function () {
   'use strict';
@@ -24,39 +25,36 @@
   ];
 
   var css='\
-  .pj-section{direction:rtl;font-family:Cairo,system-ui,sans-serif;width:100%;max-width:1240px;margin:0 auto;padding:20px 20px 10px;box-sizing:border-box}\
-  .pj-head{text-align:center;margin-bottom:36px}\
+  .pj-section{direction:rtl;font-family:Cairo,system-ui,sans-serif;width:100%;padding:64px 0;box-sizing:border-box;overflow:hidden}\
+  .pj-head{text-align:center;margin-bottom:40px;padding:0 20px}\
   .pj-head h2{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:clamp(2rem,4vw,3.1rem);color:#fff;margin:0 0 10px;letter-spacing:-.01em}\
   .pj-head h2 .g{color:#c0c0c0}\
   .pj-head p{color:#9a9a9f;font-size:.98rem;margin:0}\
-  .pj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}\
-  @media(max-width:980px){.pj-grid{grid-template-columns:repeat(2,1fr)}}\
-  @media(max-width:620px){.pj-grid{grid-template-columns:1fr}}\
-  .pj-card{position:relative;display:block;aspect-ratio:5/4;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.10);text-decoration:none;isolation:isolate;background:#0c0c0d;box-shadow:0 22px 48px -18px rgba(0,0,0,.9),0 4px 14px -6px rgba(0,0,0,.7);transition:transform .5s ease,box-shadow .5s ease,border-color .5s ease}\
-  .pj-card .pj-img{position:absolute;inset:0;background-size:cover;background-position:center;filter:none;transition:transform .6s ease;z-index:0}\
-  .pj-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.42) 46%,rgba(0,0,0,.24) 100%);z-index:1}\
-  .pj-card:hover .pj-img{transform:scale(1.06)}\
-  .pj-card:hover{border-color:rgba(192,192,192,.55);transform:translateY(-6px);box-shadow:0 34px 70px -20px rgba(0,0,0,.95),0 0 42px -12px rgba(192,192,192,.28)}\
-  .pj-body{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:24px;text-align:right}\
-  .pj-title{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:1.55rem;line-height:1.1;color:#fff;margin:0;text-shadow:0 2px 16px rgba(0,0,0,.6)}\
-  .pj-sub{color:#eaeaec;font-size:.9rem;margin:8px 0 0;text-shadow:0 1px 12px rgba(0,0,0,.55)}\
-  .pj-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}\
-  .pj-icon{width:40px;height:40px;border-radius:50%;background:#c0c0c0;color:#000;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;box-shadow:0 0 18px -4px rgba(192,192,192,.5)}\
-  .pj-tag{background:rgba(20,20,22,.75);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);color:#e5e5e8;font-size:.78rem;padding:7px 14px;border-radius:999px;white-space:nowrap}\
+  .pj-rows{position:relative;left:50%;transform:translateX(-50%);width:100vw;max-width:100vw;display:flex;flex-direction:column;gap:22px}\
+  .pj-row{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}\
+  .pj-track{display:flex;flex-wrap:nowrap;width:max-content;direction:ltr;gap:20px;padding:6px 0;will-change:transform}\
+  .pj-track.pjL{animation:pjLmove linear infinite}\
+  .pj-track.pjR{animation:pjRmove linear infinite}\
+  .pj-track:hover{animation-play-state:paused}\
+  @keyframes pjLmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}\
+  @keyframes pjRmove{from{transform:translateX(-50%)}to{transform:translateX(0)}}\
+  .pj-card{flex:0 0 auto;position:relative;height:230px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.10);text-decoration:none;background:#0c0c0d;box-shadow:0 20px 44px -20px rgba(0,0,0,.9);transition:transform .4s ease,border-color .4s ease}\
+  .pj-card img{display:block;height:100%;width:auto;max-width:none;object-fit:contain}\
+  .pj-card:hover{transform:translateY(-5px);border-color:rgba(192,192,192,.55)}\
+  .pj-ov{position:absolute;inset:0;direction:rtl;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:8px;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.12) 55%,transparent);pointer-events:none}\
+  .pj-title{font-family:"Space Grotesk",Cairo,sans-serif;font-weight:700;font-size:1.12rem;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.6)}\
+  .pj-tag{background:rgba(20,20,22,.72);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);color:#e5e5e8;font-size:.72rem;padding:5px 12px;border-radius:999px}\
+  @media(max-width:620px){.pj-card{height:176px}.pj-title{font-size:.98rem}.pj-rows{gap:16px}}\
   .framer-d8kaby,[data-framer-name="Portfolio"]{display:none !important}\
   ';
 
   function killGallery(){
-    // The old "Creative" section keeps its ad-creatives marquee (Portfolio) as a
-    // sibling of the heading we replace — remove it so only the new grid remains.
     [].slice.call(document.querySelectorAll('[data-framer-name="Portfolio"],.framer-d8kaby')).forEach(function(e){
       if(e.parentElement) e.parentElement.removeChild(e);
     });
   }
 
   function fixCreative(){
-    // The old "Creative Built for Conversion" heading survives above the hidden
-    // gallery. Reword it clearly (drop the jargon "التحويل") and center it.
     var h=[].slice.call(document.querySelectorAll('h1,h2,h3,h4,p,div,span')).filter(function(e){
       var t=e.textContent||''; return t.indexOf('التحويل')>=0 && t.indexOf('إبداع')>=0 && t.length<60 && e.getClientRects().length;
     }).sort(function(a,b){ return (a.textContent||'').length-(b.textContent||'').length; })[0];
@@ -75,28 +73,40 @@
     }
   }
 
+  function card(p){
+    return '<a class="pj-card" href="'+p.href+'" target="_blank" rel="noreferrer">'+
+      '<img src="'+p.img+'" alt="'+p.t+'" loading="lazy">'+
+      '<span class="pj-ov"><span class="pj-title">'+p.t+'</span><span class="pj-tag">'+p.tag+'</span></span>'+
+    '</a>';
+  }
+  function row(items, dir){
+    var doubled=items.concat(items); // duplicate for a seamless -50% loop
+    return '<div class="pj-row"><div class="pj-track '+dir+'">'+doubled.map(card).join('')+'</div></div>';
+  }
+
   function build(){
     killGallery();
-    if(document.getElementById('work')) return true;   // idempotent: grid already built
+    if(document.getElementById('work')) return true;
     var h=[].slice.call(document.querySelectorAll('h1,h2,h3,h4,p,span')).filter(function(e){ return e.textContent&&e.textContent.indexOf('إبداع')>=0&&e.getClientRects().length&&e.children.length<=2; })[0];
     if(!h) return false;
     var sec=h; for(var i=0;i<12&&sec.parentElement;i++){ sec=sec.parentElement; if(sec.offsetHeight>460&&sec.offsetHeight<1600) break; }
-    if(!sec||sec.offsetHeight>1600||sec===document.body) return false;  // safety: never replace a page-sized container
+    if(!sec||sec.offsetHeight>1600||sec===document.body) return false;
     if(sec.__pjDone) return true; sec.__pjDone=true;
+
+    var half=Math.ceil(P.length/2);
     var wrap=document.createElement('div'); wrap.className='pj-section';
-    var ARR='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>';
-    var cards=P.map(function(p){
-      return '<a class="pj-card" href="'+p.href+'" target="_blank" rel="noreferrer">'+
-        '<div class="pj-img" style="background-image:url('+p.img+')"></div>'+
-        '<div class="pj-body">'+
-          '<div><h3 class="pj-title">'+p.t+'</h3></div>'+
-          '<div class="pj-foot"><span class="pj-icon">'+ARR+'</span><span class="pj-tag">'+p.tag+'</span></div>'+
-        '</div></a>';
-    }).join('');
-    wrap.innerHTML='<div class="pj-head"><h2>أعمالنا <span class="g">المميزة</span></h2><p>مجموعة من العلامات التي صمّمناها وبنيناها وساعدناها على النمو.</p></div><div class="pj-grid">'+cards+'</div>';
-    sec.innerHTML=''; sec.style.background='transparent'; sec.style.padding='70px 0'; sec.style.overflow='visible';
+    wrap.innerHTML='<div class="pj-head"><h2>أعمالنا <span class="g">المميزة</span></h2>'+
+      '<p>مجموعة من العلامات التي صمّمناها وبنيناها وساعدناها على النمو.</p></div>'+
+      '<div class="pj-rows">'+row(P.slice(0,half),'pjL')+row(P.slice(half),'pjR')+'</div>';
+    sec.innerHTML=''; sec.style.background='transparent'; sec.style.padding='0'; sec.style.overflow='hidden'; sec.style.maxWidth='none'; sec.style.width='100%';
     sec.appendChild(wrap);
     sec.setAttribute('id','work');
+
+    // constant speed + seamless: duration from measured half-width (~45px/s)
+    [].slice.call(wrap.querySelectorAll('.pj-track')).forEach(function(tr){
+      var halfW=(tr.scrollWidth/2)||1400;
+      tr.style.animationDuration=Math.max(30, Math.round(halfW/45))+'s';
+    });
     return true;
   }
 
