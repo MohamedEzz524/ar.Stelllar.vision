@@ -446,7 +446,7 @@
  function ensureStyle(){
    if(document.getElementById('sv-marq-style'))return;
    var st=document.createElement('style');st.id='sv-marq-style';
-   st.textContent='#sv-marq-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}'
+   st.textContent='#sv-marq-wrap{overflow:hidden;width:100%;direction:ltr;text-align:left;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}'
      +'.sv-marq-track{display:flex;flex-wrap:nowrap;width:max-content;direction:ltr;will-change:transform;animation:svMarq linear infinite}'
      +'.sv-marq-track:hover{animation-play-state:paused}'
      +'.sv-marq-pill{flex:0 0 auto;direction:rtl;white-space:nowrap;margin-right:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e5e5e8;font-family:Cairo,system-ui,sans-serif;font-size:.9rem;line-height:1;padding:10px 18px;border-radius:999px}'
