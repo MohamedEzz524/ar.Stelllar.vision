@@ -183,9 +183,15 @@
     });
   }
   function findFormContainer(){
-    var labels=[].slice.call(document.querySelectorAll('p,span,div,button,a')).filter(function(e){ return e.getClientRects().length && ['إرسال','Submit'].indexOf((e.textContent||'').replace(/\s+/g,' ').trim())>=0 && e.children.length<=1; });
-    for(var i=0;i<labels.length;i++){ var p=labels[i]; for(var k=0;k<16&&p.parentElement;k++){ p=p.parentElement; if(p.querySelector('[name="Name"]')&&p.querySelector('[name="Email"]')) return p; } }
-    return null;
+    // scan(true) = only visible labels; scan(false) = any (needed on iOS Safari where the
+    // contact section can be collapsed/hidden, so the submit label has zero size). unhide()
+    // then reveals whatever we find.
+    function scan(vis){
+      var labels=[].slice.call(document.querySelectorAll('p,span,div,button,a')).filter(function(e){ return (!vis || e.getClientRects().length) && ['إرسال','Submit'].indexOf((e.textContent||'').replace(/\s+/g,' ').trim())>=0 && e.children.length<=1; });
+      for(var i=0;i<labels.length;i++){ var p=labels[i]; for(var k=0;k<16&&p.parentElement;k++){ p=p.parentElement; if(p.querySelector('[name="Name"]')&&p.querySelector('[name="Email"]')) return p; } }
+      return null;
+    }
+    return scan(true) || scan(false);
   }
   function unhide(node){ // self-heal: some devices leave the contact section under a
     var a=node;          // Framer appear-animation (opacity:0) whose element lacks the

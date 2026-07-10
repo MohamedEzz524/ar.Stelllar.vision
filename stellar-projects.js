@@ -90,6 +90,8 @@
     if(!h) return false;
     var sec=h; for(var i=0;i<12&&sec.parentElement;i++){ sec=sec.parentElement; if(sec.offsetHeight>460&&sec.offsetHeight<1600) break; }
     if(!sec||sec.offsetHeight>1600||sec===document.body) return false;
+    // never wipe a container that holds the hero (its tag ticker / heading)
+    if(sec.querySelector('[data-framer-name="Ticker - Tags"]') || (sec.textContent||'').indexOf('عالية الأداء')>=0) return false;
     if(sec.__pjDone) return true; sec.__pjDone=true;
 
     var half=Math.ceil(P.length/2);

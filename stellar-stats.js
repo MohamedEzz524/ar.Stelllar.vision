@@ -23,27 +23,25 @@
   ';
 
   function findContainer() {
-    var leaf = [].slice.call(document.querySelectorAll('p,div,span')).filter(function (e) {
-      return (e.textContent || '').trim() === 'عميل سعيد' && e.getClientRects().length;
-    })[0];
-    if (!leaf) return null;
-    var sec = leaf;
-    for (var i = 0; i < 10 && sec.parentElement; i++) {
-      sec = sec.parentElement;
-      var t = sec.textContent || '';
-      if (MARKERS.every(function (m) { return t.indexOf(m) >= 0; })) return sec;
-    }
-    return null;
+    // Tightest box holding ALL stat markers but NOT the hero tag ticker — otherwise
+    // we'd wipe a container that holds the hero and collapse it (seen on iOS Safari).
+    var cands = [].slice.call(document.querySelectorAll('div')).filter(function (e) {
+      var t = e.textContent || '';
+      return MARKERS.every(function (m) { return t.indexOf(m) >= 0; }) &&
+             !e.querySelector('[data-framer-name="Ticker - Tags"]') &&
+             (t.indexOf('عالية الأداء') < 0);
+    });
+    if (!cands.length) return null;
+    cands.sort(function (a, b) { return (a.textContent || '').length - (b.textContent || '').length; });
+    return cands[0];
   }
 
   function build() {
     var c = findContainer();
     if (!c) return false;
     if (c.__svStats) return true;
-    // sanity: container should be the stats row, not a giant section
-    if ((c.textContent || '').replace(/\s+/g, '').length > 120) {
-      // walked too far or extra content — still proceed only if it's clearly the stats grid
-    }
+    // never wipe a box holding the hero (its tag ticker or heading)
+    if (c.querySelector('[data-framer-name="Ticker - Tags"]') || (c.textContent || '').indexOf('عالية الأداء') >= 0) return false;
     c.__svStats = true;
     var cards = STATS.map(function (s) {
       return '<div class="sv-stat"><div class="num"><span class="pfx">' + s.pfx + '</span>' + s.num + '</div>' +
