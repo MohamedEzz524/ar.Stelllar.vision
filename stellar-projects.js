@@ -90,6 +90,9 @@
     if(!h) return false;
     var sec=h; for(var i=0;i<12&&sec.parentElement;i++){ sec=sec.parentElement; if(sec.offsetHeight>460&&sec.offsetHeight<1600) break; }
     if(!sec||sec.offsetHeight>1600||sec===document.body) return false;
+    // SAFETY: never wipe a container that holds the hero (its tag ticker / hero heading) —
+    // if the walk-up landed there, bail and retry so we only replace the creative section.
+    if(sec.querySelector('[data-framer-name="Ticker - Tags"]') || (sec.textContent||'').indexOf('عالية الأداء')>=0) return false;
     if(sec.__pjDone) return true; sec.__pjDone=true;
 
     var half=Math.ceil(P.length/2);
@@ -133,7 +136,11 @@
 
   function init(){
     var s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
-    var tries=0; var iv=setInterval(function(){ build(); fixCreative(); if(++tries>=18) clearInterval(iv); }, 700);
+    // NOTE: build() must NOT run before layout settles — its section-finding uses
+    // offsetHeight, and at DOMContentLoaded (fonts/CSS not fully applied) it
+    // mis-identifies the section and wipes the wrong container (incl. the hero ticker).
+    // A short delay lets layout settle; the preload veil covers this window (no FOUC).
+    var tries=0; var iv=setInterval(function(){ build(); fixCreative(); if(++tries>=20) clearInterval(iv); }, 350);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();

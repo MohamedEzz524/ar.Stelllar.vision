@@ -312,7 +312,9 @@
 	
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><style id="ar-rtl-override">html,body,p,span,a,h1,h2,h3,h4,h5,h6,div,li,ul,ol,button,input,textarea,select,label,strong,em,[class*="framer-"]{font-family:"Cairo",system-ui,-apple-system,sans-serif !important;}</style></head>
 <body>
-	
+<style id="sv-preload-style">#sv-preload{position:fixed;inset:0;z-index:2147483647;background:#070708;opacity:1;transition:opacity .35s ease;animation:svPreloadFail 0s linear 3200ms forwards}#sv-preload.sv-hide{opacity:0!important;pointer-events:none}@keyframes svPreloadFail{to{opacity:0;visibility:hidden;pointer-events:none}}</style>
+<div id="sv-preload" aria-hidden="true"></div>
+
 	<!-- Start of bodyStart -->
     <!-- Snippet: legacy-bodyStart -->
 <!-- Google Tag Manager (noscript) -->
@@ -501,9 +503,23 @@
    if(intact(tick))return true;
    build(tick);return true;
  }
- function boot(){var t=0;var iv=setInterval(function(){fix();if(++t>=40)clearInterval(iv);},700);} // self-heal ~28s
- if(document.readyState==='complete')boot();else window.addEventListener('load',boot);
+ function boot(){fix();var t=0;var iv=setInterval(function(){fix();if(++t>=40)clearInterval(iv);},700);} // build + self-heal ~28s
+ // Build AFTER the projects rebuild so it doesn't perturb layout while projects finds its section.
+ function start(){ setTimeout(boot, 550); }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
  var rz,lastW=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lastW)return;lastW=window.innerWidth;clearTimeout(rz);rz=setTimeout(function(){var tick=document.querySelector('[data-framer-name="Ticker - Tags"]');if(tick&&!building)build(tick);},400);});
+})();
+</script><script id="sv-preload-hide">
+(function(){
+ function hide(){var v=document.getElementById('sv-preload');if(v&&!v.__hid){v.__hid=1;v.classList.add('sv-hide');setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);},500);}}
+ /* Reveal only once the projects marquee (#work) has been built — that transform
+    runs on a short delay (needs settled layout), so we keep the veil until it's done
+    to avoid any flash of the original section. Hard safety cap so it never sticks. */
+ var tries=0;
+ function ready(){ return document.getElementById('work') && document.querySelector('.sv-marq-pill'); }
+ function check(){ if(ready() || ++tries>30){ requestAnimationFrame(function(){requestAnimationFrame(hide);}); } else { setTimeout(check,80); } }
+ check();
+ setTimeout(hide,2800);
 })();
 </script></body>
 </html>

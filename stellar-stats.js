@@ -23,23 +23,24 @@
   ';
 
   function findContainer() {
-    var leaf = [].slice.call(document.querySelectorAll('p,div,span')).filter(function (e) {
-      return (e.textContent || '').trim() === 'عميل سعيد' && e.getClientRects().length;
-    })[0];
-    if (!leaf) return null;
-    var sec = leaf;
-    for (var i = 0; i < 10 && sec.parentElement; i++) {
-      sec = sec.parentElement;
-      var t = sec.textContent || '';
-      if (MARKERS.every(function (m) { return t.indexOf(m) >= 0; })) return sec;
-    }
-    return null;
+    // Tightest container that holds ALL original stat markers but does NOT contain the
+    // hero tag ticker — otherwise we'd wipe "Sub Container" (stats + ticker share it)
+    // and delete the hero marquee. Smallest textContent = the actual stats grid.
+    var cands = [].slice.call(document.querySelectorAll('div')).filter(function (e) {
+      var t = e.textContent || '';
+      return MARKERS.every(function (m) { return t.indexOf(m) >= 0; }) &&
+             !e.querySelector('[data-framer-name="Ticker - Tags"]');
+    });
+    if (!cands.length) return null;
+    cands.sort(function (a, b) { return (a.textContent || '').length - (b.textContent || '').length; });
+    return cands[0];
   }
 
   function build() {
     var c = findContainer();
     if (!c) return false;
     if (c.__svStats) return true;
+    if (c.querySelector('[data-framer-name="Ticker - Tags"]')) return false; // never wipe a box holding the hero ticker
     // sanity: container should be the stats row, not a giant section
     if ((c.textContent || '').replace(/\s+/g, '').length > 120) {
       // walked too far or extra content — still proceed only if it's clearly the stats grid
@@ -59,6 +60,7 @@
 
   function init() {
     var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
+    build(); // immediate — never flash the template's "0" counter
     var tries = 0;
     var iv = setInterval(function () { if (build() || ++tries >= 16) clearInterval(iv); }, 700);
   }

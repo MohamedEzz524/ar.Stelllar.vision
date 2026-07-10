@@ -69,6 +69,7 @@
   function reflow(){ tickers().forEach(function(ul){ if(ul.__logoBuilt) setup(ul, ul.__logoIdx||0); }); }
 
   function init(){
+    build(); // immediate — avoid the static-then-scrolling flash
     var n=0, iv=setInterval(function(){ if(build() || ++n>=16) clearInterval(iv); }, 600);
     window.addEventListener('load', reflow);
     var lastW=window.innerWidth;
