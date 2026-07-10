@@ -115,7 +115,7 @@
   /* ---------- styles ---------- */
   var css =
     '\
-  .lm-sec{direction:rtl;font-family:Cairo,system-ui,sans-serif; padding:80px 0;display:flex;justify-content:center}\
+  .lm-sec{direction:rtl;font-family:Cairo,system-ui,sans-serif; padding:80px 20px;display:flex;justify-content:center}\
   .lm-wrap{position:relative;width:100%;max-width:1120px;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;\
     background:radial-gradient(70% 90% at 88% 8%,rgba(192,192,192,.16),transparent 55%),linear-gradient(135deg,#18181b,#0b0b0d);\
     border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:52px;box-sizing:border-box;\
@@ -442,16 +442,6 @@
 
   /* ---------- inject the section ---------- */
   function injectSection() {
-    // clean build: render straight into the provided mount point
-    var mountEl = document.getElementById("leadmagnet-mount");
-    if (mountEl) {
-      if (mountEl.__lmDone) return true;
-      mountEl.__lmDone = true;
-      mountEl.innerHTML = sectionHTML();
-      var op = mountEl.querySelector("#lm-open");
-      if (op) op.addEventListener("click", open);
-      return true;
-    }
     if (document.getElementById("lead-magnet")) return true;
     // place just before the contact form section ("...بقدر ما تعمل...")
     var anchor = [].slice

@@ -183,7 +183,6 @@
     });
   }
   function findFormContainer(){
-    var mountEl=document.getElementById('booking-mount'); if(mountEl) return mountEl; // clean build mount
     var labels=[].slice.call(document.querySelectorAll('p,span,div,button,a')).filter(function(e){ return e.getClientRects().length && ['إرسال','Submit'].indexOf((e.textContent||'').replace(/\s+/g,' ').trim())>=0 && e.children.length<=1; });
     for(var i=0;i<labels.length;i++){ var p=labels[i]; for(var k=0;k<16&&p.parentElement;k++){ p=p.parentElement; if(p.querySelector('[name="Name"]')&&p.querySelector('[name="Email"]')) return p; } }
     return null;
