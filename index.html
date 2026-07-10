@@ -340,7 +340,24 @@
 	<!-- Start of bodyEnd -->
     
     <!-- End of bodyEnd -->
-<script id="stellar-fragfix">
+<script id="stellar-reveal">
+(function(){
+ /* De-Framerize reveal — engine-independent. Framer's appear animations start at
+    inline opacity:0 + transform and were animated in by the (removed) runtime. The
+    CSS override [style*="opacity:0;transform:"] can MISS on Safari/iOS because
+    WebKit reserializes the style attribute (spacing/order), leaving the hero empty
+    and the contact section hidden. Reveal via CSSOM el.style.opacity (normalized). */
+ function reveal(){
+   var els=document.querySelectorAll('[style*="opacity"]');
+   for(var i=0;i<els.length;i++){ var el=els[i], o=parseFloat(el.style.opacity);
+     if(!isNaN(o) && o<0.02){ el.style.setProperty('opacity','1','important'); el.style.setProperty('transform','none','important'); } }
+ }
+ reveal();
+ document.addEventListener('DOMContentLoaded',reveal);
+ window.addEventListener('load',reveal);
+ [60,200,600,1400].forEach(function(t){ setTimeout(reveal,t); });
+})();
+</script><script id="stellar-fragfix">
 (function(){function fix(){
  function frag(head,from,to){var els=[].slice.call(document.querySelectorAll('h1,h2,h3,h4'));
   var el=els.filter(function(e){return e.textContent&&e.textContent.indexOf(head)>=0;})[0];if(!el)return;
